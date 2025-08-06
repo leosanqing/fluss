@@ -71,7 +71,10 @@ bind.listeners: FLUSS://192.168.10.100:9123
 zookeeper.address: 192.168.10.199:2181
 zookeeper.path.root: /fluss
 
-remote.data.dir: /tmp/fluss-remote-data
+# In distributed mode, must be set to a remote location, 
+# like: oss://bucket/path for oss filesystem or hdfs://namenode:port/path for hdfs filesystem. 
+# Otherwise, 'No such file or directory' exceptions will occur during queries.
+remote.data.dir: hdfs://namenode:port/tmp/fluss-remote-data
 ```
 
 **Node1**
@@ -84,7 +87,10 @@ tablet-server.id: 1
 zookeeper.address: 192.168.10.199:2181
 zookeeper.path.root: /fluss
 
-remote.data.dir: /tmp/fluss-remote-data
+# In distributed mode, must be set to a remote location, 
+# like: oss://bucket/path for oss filesystem or hdfs://namenode:port/path for hdfs filesystem. 
+# Otherwise, 'No such file or directory' exceptions will occur during queries.
+remote.data.dir: hdfs://namenode:port/tmp/fluss-remote-data
 ```
 
 **Node2**
@@ -97,7 +103,10 @@ tablet-server.id: 2
 zookeeper.address: 192.168.10.199:2181
 zookeeper.path.root: /fluss
 
-remote.data.dir: /tmp/fluss-remote-data
+# In distributed mode, must be set to a remote location, 
+# like: oss://bucket/path for oss filesystem or hdfs://namenode:port/path for hdfs filesystem. 
+# Otherwise, 'No such file or directory' exceptions will occur during queries.
+remote.data.dir: hdfs://namenode:port/tmp/fluss-remote-data
 ```
 
 **Node3**
@@ -109,7 +118,10 @@ tablet-server.id: 3
 zookeeper.address: 192.168.10.199:2181
 zookeeper.path.root: /fluss
 
-remote.data.dir: /tmp/fluss-remote-data
+# In distributed mode, must be set to a remote location, 
+# like: oss://bucket/path for oss filesystem or hdfs://namenode:port/path for hdfs filesystem. 
+# Otherwise, 'No such file or directory' exceptions will occur during queries.
+remote.data.dir: hdfs://namenode:port/tmp/fluss-remote-data
 ```
 
 :::note
