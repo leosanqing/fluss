@@ -71,9 +71,9 @@ bind.listeners: FLUSS://192.168.10.100:9123
 zookeeper.address: 192.168.10.199:2181
 zookeeper.path.root: /fluss
 
-# In distributed mode, must be set to a remote location, 
-# like: oss://bucket/path for oss filesystem or hdfs://namenode:port/path for hdfs filesystem. 
-# Otherwise, 'No such file or directory' exceptions will occur during queries.
+# When running in distributed mode, be sure to point to a remote path—
+# e.g. oss://bucket/path for OSS or hdfs://namenode:port/path for HDFS.
+# Otherwise, queries will fail with a “No such file or directory” error.
 remote.data.dir: hdfs://namenode:port/tmp/fluss-remote-data
 ```
 
@@ -87,9 +87,9 @@ tablet-server.id: 1
 zookeeper.address: 192.168.10.199:2181
 zookeeper.path.root: /fluss
 
-# In distributed mode, must be set to a remote location, 
-# like: oss://bucket/path for oss filesystem or hdfs://namenode:port/path for hdfs filesystem. 
-# Otherwise, 'No such file or directory' exceptions will occur during queries.
+# When running in distributed mode, be sure to point to a remote path—
+# e.g. oss://bucket/path for OSS or hdfs://namenode:port/path for HDFS.
+# Otherwise, queries will fail with a “No such file or directory” error.
 remote.data.dir: hdfs://namenode:port/tmp/fluss-remote-data
 ```
 
@@ -103,9 +103,9 @@ tablet-server.id: 2
 zookeeper.address: 192.168.10.199:2181
 zookeeper.path.root: /fluss
 
-# In distributed mode, must be set to a remote location, 
-# like: oss://bucket/path for oss filesystem or hdfs://namenode:port/path for hdfs filesystem. 
-# Otherwise, 'No such file or directory' exceptions will occur during queries.
+# When running in distributed mode, be sure to point to a remote path—
+# e.g. oss://bucket/path for OSS or hdfs://namenode:port/path for HDFS.
+# Otherwise, queries will fail with a “No such file or directory” error.
 remote.data.dir: hdfs://namenode:port/tmp/fluss-remote-data
 ```
 
@@ -118,9 +118,9 @@ tablet-server.id: 3
 zookeeper.address: 192.168.10.199:2181
 zookeeper.path.root: /fluss
 
-# In distributed mode, must be set to a remote location, 
-# like: oss://bucket/path for oss filesystem or hdfs://namenode:port/path for hdfs filesystem. 
-# Otherwise, 'No such file or directory' exceptions will occur during queries.
+# When running in distributed mode, be sure to point to a remote path—
+# e.g. oss://bucket/path for OSS or hdfs://namenode:port/path for HDFS.
+# Otherwise, queries will fail with a “No such file or directory” error.
 remote.data.dir: hdfs://namenode:port/tmp/fluss-remote-data
 ```
 
