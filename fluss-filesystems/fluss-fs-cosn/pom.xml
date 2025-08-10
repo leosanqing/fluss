@@ -83,18 +83,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.qcloud</groupId>
-            <artifactId>cos_api</artifactId>
-            <version>${fs.cos.sdk.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.xml.bind</groupId>
-                    <artifactId>jaxb-api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
             <groupId>com.tencentcloudapi</groupId>
             <artifactId>tencentcloud-sdk-java-sts</artifactId>
             <version>${tencentcloudapi.version}</version>
@@ -122,7 +110,6 @@
             <type>test-jar</type>
         </dependency>
     </dependencies>
-
 
     <build>
         <plugins>
