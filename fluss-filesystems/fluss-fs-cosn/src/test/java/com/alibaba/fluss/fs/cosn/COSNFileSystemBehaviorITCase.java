@@ -21,10 +21,15 @@ import com.alibaba.fluss.config.Configuration;
 import com.alibaba.fluss.fs.FileSystem;
 import com.alibaba.fluss.fs.FileSystemBehaviorTestSuite;
 import com.alibaba.fluss.fs.FsPath;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+
 import java.util.UUID;
-import static org.apache.hadoop.fs.cosn.CosNConfigKeys.*;
+
+import static org.apache.hadoop.fs.cosn.CosNConfigKeys.COSN_REGION_KEY;
+import static org.apache.hadoop.fs.cosn.CosNConfigKeys.COSN_SECRET_ID_KEY;
+import static org.apache.hadoop.fs.cosn.CosNConfigKeys.COSN_SECRET_KEY_KEY;
 
 /**
  * An implementation of the {@link FileSystemBehaviorTestSuite} for the COSN file system with Hadoop

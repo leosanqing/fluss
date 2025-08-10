@@ -18,6 +18,7 @@
 package com.alibaba.fluss.fs.cosn;
 
 import javax.annotation.Nullable;
+
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /** Access to credentials to access COSN buckets during integration tests. */
@@ -26,14 +27,20 @@ public class COSTestCredentials {
     @Nullable private static final String BUCKET = System.getenv("ARTIFACTS_COSN_BUCKET");
     @Nullable private static final String ACCESS_KEY = System.getenv("ARTIFACTS_COSN_ACCESS_KEY");
     @Nullable private static final String SECRET_KEY = System.getenv("ARTIFACTS_COSN_SECRET_KEY");
-    @Nullable private static final String STS_ENDPOINT = System.getenv("ARTIFACTS_COSN_STS_ENDPOINT");
+
+    @Nullable
+    private static final String STS_ENDPOINT = System.getenv("ARTIFACTS_COSN_STS_ENDPOINT");
+
     @Nullable private static final String STS_REGION = System.getenv("ARTIFACTS_COSN_STS_REGION");
     @Nullable private static final String ROLE_ARN = System.getenv("ARTIFACTS_COSN_ROLE_ARN");
 
     // ------------------------------------------------------------------------
 
     public static boolean credentialsAvailable() {
-        return isNotEmpty(REGION) && isNotEmpty(BUCKET) && isNotEmpty(ACCESS_KEY) && isNotEmpty(SECRET_KEY);
+        return isNotEmpty(REGION)
+                && isNotEmpty(BUCKET)
+                && isNotEmpty(ACCESS_KEY)
+                && isNotEmpty(SECRET_KEY);
     }
 
     private static boolean isNotEmpty(@Nullable String str) {
@@ -41,7 +48,8 @@ public class COSTestCredentials {
     }
 
     public static void assumeCredentialsAvailable() {
-        assumeTrue(credentialsAvailable(), "No COSN credentials available in this test's environment");
+        assumeTrue(
+                credentialsAvailable(), "No COSN credentials available in this test's environment");
     }
 
     public static String getCOSNRegion() {
@@ -72,8 +80,7 @@ public class COSTestCredentials {
         if (isNotEmpty(STS_ENDPOINT)) {
             return STS_ENDPOINT;
         } else {
-            // Return a default if not set
-            return "sts.tencentcloudapi.com";
+            throw new IllegalStateException("COSN sts endpoint is not available");
         }
     }
 
@@ -81,11 +88,10 @@ public class COSTestCredentials {
         if (isNotEmpty(STS_REGION)) {
             return STS_REGION;
         } else {
-            // Return a default region, e.g., the main bucket region
-            return getCOSNRegion();
+            throw new IllegalStateException("COSN sts region is not available");
         }
     }
-    
+
     public static String getCOSNRoleArn() {
         if (isNotEmpty(ROLE_ARN)) {
             return ROLE_ARN;

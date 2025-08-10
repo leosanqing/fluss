@@ -21,13 +21,21 @@ import com.alibaba.fluss.config.Configuration;
 import com.alibaba.fluss.fs.FileSystem;
 import com.alibaba.fluss.fs.FileSystemBehaviorTestSuite;
 import com.alibaba.fluss.fs.FsPath;
+
 import org.apache.hadoop.fs.cosn.auth.EnvironmentVariableCredentialsProvider;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import java.util.UUID;
-import static org.apache.hadoop.fs.cosn.CosNConfigKeys.*;
 
-/** IT case for access cosn via set {@link org.apache.hadoop.fs.cosn.auth.SimpleCredentialsProvider}. */
+import java.util.UUID;
+
+import static org.apache.hadoop.fs.cosn.CosNConfigKeys.COSN_CREDENTIALS_PROVIDER;
+import static org.apache.hadoop.fs.cosn.CosNConfigKeys.COSN_REGION_KEY;
+import static org.apache.hadoop.fs.cosn.CosNConfigKeys.COSN_SECRET_ID_KEY;
+import static org.apache.hadoop.fs.cosn.CosNConfigKeys.COSN_SECRET_KEY_KEY;
+
+/**
+ * IT case for access cosn via set {@link org.apache.hadoop.fs.cosn.auth.SimpleCredentialsProvider}.
+ */
 class COSNWithCredentialsProviderFileSystemBehaviorITCase extends FileSystemBehaviorTestSuite {
 
     private static final String TEST_DATA_DIR = "tests-" + UUID.randomUUID();
@@ -38,7 +46,8 @@ class COSNWithCredentialsProviderFileSystemBehaviorITCase extends FileSystemBeha
 
         // use SystemPropertiesCredentialProvider
         final Configuration conf = new Configuration();
-        conf.setString(COSN_CREDENTIALS_PROVIDER, EnvironmentVariableCredentialsProvider.class.getName());
+        conf.setString(
+                COSN_CREDENTIALS_PROVIDER, EnvironmentVariableCredentialsProvider.class.getName());
         conf.setString(COSN_REGION_KEY, COSTestCredentials.getCOSNRegion());
 
         // now, we need to set cosn config to system properties
@@ -46,7 +55,7 @@ class COSNWithCredentialsProviderFileSystemBehaviorITCase extends FileSystemBeha
         System.setProperty(COSN_SECRET_KEY_KEY, COSTestCredentials.getCOSNSecretKey());
         FileSystem.initialize(conf, null);
     }
-    
+
     @AfterAll
     static void cleanup() {
         // clean up system properties

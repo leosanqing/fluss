@@ -37,7 +37,7 @@ import java.io.IOException;
 class COSNFileSystem extends HadoopFileSystem {
 
     private final Configuration conf;
-    private volatile COSNSecurityTokenProvider COSNSecurityTokenProvider;
+    private volatile COSNSecurityTokenProvider cosnSecurityTokenProvider;
     private final String scheme;
 
     COSNFileSystem(FileSystem hadoopFileSystem, String scheme, Configuration conf) {
@@ -50,17 +50,17 @@ class COSNFileSystem extends HadoopFileSystem {
     public ObtainedSecurityToken obtainSecurityToken() throws IOException {
         try {
             mayCreateSecurityTokenProvider();
-            return COSNSecurityTokenProvider.obtainSecurityToken(scheme);
+            return cosnSecurityTokenProvider.obtainSecurityToken(scheme);
         } catch (Exception e) {
             throw new IOException(e);
         }
     }
 
     private void mayCreateSecurityTokenProvider() throws IOException {
-        if (COSNSecurityTokenProvider == null) {
+        if (cosnSecurityTokenProvider == null) {
             synchronized (this) {
-                if (COSNSecurityTokenProvider == null) {
-                    COSNSecurityTokenProvider = new COSNSecurityTokenProvider(conf);
+                if (cosnSecurityTokenProvider == null) {
+                    cosnSecurityTokenProvider = new COSNSecurityTokenProvider(conf);
                 }
             }
         }

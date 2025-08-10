@@ -28,8 +28,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Support dynamic session credentials for authenticating with COSN. It'll get credentials from
- * {@link COSNSecurityTokenReceiver}. It implements cosn native {@link COSCredentialsProvider} to work
- * with {@link CosNFileSystem}.
+ * {@link COSNSecurityTokenReceiver}. It implements cosn native {@link COSCredentialsProvider} to
+ * work with {@link CosNFileSystem}.
  */
 @Internal
 public class DynamicTemporaryCosnCredentialsProvider implements COSCredentialsProvider {

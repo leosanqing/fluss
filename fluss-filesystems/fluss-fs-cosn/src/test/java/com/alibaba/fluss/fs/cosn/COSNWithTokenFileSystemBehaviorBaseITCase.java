@@ -20,8 +20,11 @@ package com.alibaba.fluss.fs.cosn;
 import com.alibaba.fluss.config.Configuration;
 import com.alibaba.fluss.fs.FileSystem;
 import com.alibaba.fluss.fs.FileSystemBehaviorTestSuite;
+
 import static com.alibaba.fluss.fs.cosn.token.COSNSecurityTokenProvider.STS_REGION_KEY;
-import static org.apache.hadoop.fs.cosn.CosNConfigKeys.*;
+import static org.apache.hadoop.fs.cosn.CosNConfigKeys.COSN_REGION_KEY;
+import static org.apache.hadoop.fs.cosn.CosNConfigKeys.COSN_SECRET_ID_KEY;
+import static org.apache.hadoop.fs.cosn.CosNConfigKeys.COSN_SECRET_KEY_KEY;
 
 /** Base case for access cosn with sts token in hadoop sdk as COSN FileSystem implementation. */
 abstract class COSNWithTokenFileSystemBehaviorBaseITCase extends FileSystemBehaviorTestSuite {
@@ -29,12 +32,11 @@ abstract class COSNWithTokenFileSystemBehaviorBaseITCase extends FileSystemBehav
     static void initFileSystemWithSecretKey() {
         COSTestCredentials.assumeCredentialsAvailable();
 
-        // first init filesystem with ak/sk
+        // first init filesystem with ak/sk to be able to generate token
         Configuration conf = new Configuration();
         conf.setString(COSN_REGION_KEY, COSTestCredentials.getCOSNRegion());
         conf.setString(COSN_SECRET_ID_KEY, COSTestCredentials.getCOSNAccessKey());
         conf.setString(COSN_SECRET_KEY_KEY, COSTestCredentials.getCOSNSecretKey());
-        // need to set sts endpoint and roleArn to make it can generate token
         conf.setString("fs.cosn.sts.endpoint", COSTestCredentials.getCOSNStsEndpoint());
         conf.setString(STS_REGION_KEY, COSTestCredentials.getCOSNStsRegion());
         conf.setString("fs.cosn.roleArn", COSTestCredentials.getCOSNRoleArn());

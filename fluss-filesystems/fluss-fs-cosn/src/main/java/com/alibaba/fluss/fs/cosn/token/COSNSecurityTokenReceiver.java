@@ -63,7 +63,6 @@ public class COSNSecurityTokenReceiver implements SecurityTokenReceiver {
             LOG.debug("COSN Provider already exists");
         }
 
-        // then, set addition info
         if (additionInfos == null) {
             // if addition info is null, it also means we have not received any token,
             // we throw CosClientException
@@ -91,9 +90,6 @@ public class COSNSecurityTokenReceiver implements SecurityTokenReceiver {
         com.alibaba.fluss.fs.token.Credentials flussCredentials =
                 CredentialsJsonSerde.fromJson(tokenBytes);
 
-        // flussCredentials.getAccessKeyId() -> TmpSecretId
-        // flussCredentials.getSecretAccessKey() -> TmpSecretKey
-        // flussCredentials.getSecurityToken() -> Token
         credentials =
                 new BasicSessionCredentials(
                         flussCredentials.getAccessKeyId(),

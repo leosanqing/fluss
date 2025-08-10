@@ -47,7 +47,7 @@ public class COSNFileSystemPlugin implements FileSystemPlugin {
 
     /**
      * In order to simplify, we make fluss oss configuration keys same with hadoop oss module. So,
-     * we add all configuration key with prefix `fs.oss` in fluss conf to hadoop conf
+     * we add all configuration key with prefix `fs.cosn` in fluss conf to hadoop conf
      */
     private static final String[] FLUSS_CONFIG_PREFIXES = {"fs.cosn."};
 

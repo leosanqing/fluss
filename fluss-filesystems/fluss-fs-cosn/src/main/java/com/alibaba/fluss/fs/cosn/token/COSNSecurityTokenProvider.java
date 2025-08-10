@@ -78,18 +78,22 @@ public class COSNSecurityTokenProvider {
         if (this.region == null) {
             throw new IOException("Missing required configuration: " + COSN_REGION_KEY);
         }
+
+        String stsRegion = conf.get(STS_REGION_KEY);
+        if (stsRegion == null) {
+            throw new IOException("Missing required configuration: " + STS_REGION_KEY);
+        }
         // session name is used for audit, in here, we just generate a unique session name
         this.roleSessionName = "fluss-" + UUID.randomUUID();
 
-        // region for sts can be empty
-        this.stsClient = new StsClient(cred, conf.get(STS_REGION_KEY, ""), clientProfile);
+        this.stsClient = new StsClient(cred, stsRegion, clientProfile);
     }
 
     public ObtainedSecurityToken obtainSecurityToken(String scheme) throws Exception {
         final AssumeRoleRequest request = new AssumeRoleRequest();
         request.setRoleArn(roleArn);
         request.setRoleSessionName(roleSessionName);
-        // DurationSeconds default is 7200s (2 hours), can be configured if needed
+        // todo: may consider make token duration time configurable, we don't set it now
         request.setDurationSeconds(3600L);
 
         final AssumeRoleResponse response = stsClient.AssumeRole(request);

@@ -22,8 +22,10 @@ import com.alibaba.fluss.fs.FileSystem;
 import com.alibaba.fluss.fs.FsPath;
 import com.alibaba.fluss.fs.cosn.token.COSNSecurityTokenReceiver;
 import com.alibaba.fluss.fs.token.ObtainedSecurityToken;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+
 import java.util.UUID;
 
 /** IT case for access cosn with sts token in hadoop sdk as FileSystem. */
@@ -65,7 +67,8 @@ class COSNWithTokenFileSystemBehaviorITCase extends COSNWithTokenFileSystemBehav
         COSNSecurityTokenReceiver cosnSecurityTokenReceiver = new COSNSecurityTokenReceiver();
         cosnSecurityTokenReceiver.onNewTokensObtained(obtainedSecurityToken);
 
-        // This re-initialization will now use the token receiver because no static keys are provided.
+        // This re-initialization will now use the token receiver because no static keys are
+        // provided.
         // The receiver configures the dynamic provider which holds the temporary token.
         FileSystem.initialize(configuration, null);
     }
