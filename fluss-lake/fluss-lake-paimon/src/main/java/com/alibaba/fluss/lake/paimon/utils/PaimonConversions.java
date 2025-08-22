@@ -17,15 +17,20 @@
 
 package com.alibaba.fluss.lake.paimon.utils;
 
+import com.alibaba.fluss.lake.paimon.source.FlussRowAsPaimonRow;
 import com.alibaba.fluss.metadata.ResolvedPartitionSpec;
 import com.alibaba.fluss.metadata.TablePath;
 import com.alibaba.fluss.record.ChangeType;
+import com.alibaba.fluss.row.GenericRow;
+import com.alibaba.fluss.row.InternalRow;
 
 import org.apache.paimon.catalog.Identifier;
 import org.apache.paimon.data.BinaryRow;
 import org.apache.paimon.data.BinaryRowWriter;
 import org.apache.paimon.data.BinaryString;
+import org.apache.paimon.types.DataType;
 import org.apache.paimon.types.RowKind;
+import org.apache.paimon.types.RowType;
 
 import javax.annotation.Nullable;
 
@@ -47,6 +52,21 @@ public class PaimonConversions {
                 return RowKind.DELETE;
             default:
                 throw new IllegalArgumentException("Unsupported change type: " + changeType);
+        }
+    }
+
+    public static ChangeType toChangeType(RowKind rowKind) {
+        switch (rowKind) {
+            case INSERT:
+                return ChangeType.INSERT;
+            case UPDATE_BEFORE:
+                return ChangeType.UPDATE_BEFORE;
+            case UPDATE_AFTER:
+                return ChangeType.UPDATE_AFTER;
+            case DELETE:
+                return ChangeType.DELETE;
+            default:
+                throw new IllegalArgumentException("Unsupported rowKind: " + rowKind);
         }
     }
 
@@ -77,5 +97,13 @@ public class PaimonConversions {
 
         writer.complete();
         return partitionBinaryRow;
+    }
+
+    public static Object toPaimonLiteral(DataType dataType, Object flussLiteral) {
+        RowType rowType = RowType.of(dataType);
+        InternalRow flussRow = GenericRow.of(flussLiteral);
+        FlussRowAsPaimonRow flussRowAsPaimonRow = new FlussRowAsPaimonRow(flussRow, rowType);
+        return org.apache.paimon.data.InternalRow.createFieldGetter(dataType, 0)
+                .getFieldOrNull(flussRowAsPaimonRow);
     }
 }

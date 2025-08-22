@@ -301,6 +301,31 @@ public class ZooKeeperClient implements AutoCloseable {
         LOG.info("Updated {} for bucket {} in Zookeeper.", leaderAndIsr, tableBucket);
     }
 
+    public void batchUpdateLeaderAndIsr(Map<TableBucket, LeaderAndIsr> leaderAndIsrList)
+            throws Exception {
+        if (leaderAndIsrList.isEmpty()) {
+            return;
+        }
+
+        List<CuratorOp> ops = new ArrayList<>(leaderAndIsrList.size());
+        for (Map.Entry<TableBucket, LeaderAndIsr> entry : leaderAndIsrList.entrySet()) {
+            TableBucket tableBucket = entry.getKey();
+            LeaderAndIsr leaderAndIsr = entry.getValue();
+
+            String path = LeaderAndIsrZNode.path(tableBucket);
+            byte[] data = LeaderAndIsrZNode.encode(leaderAndIsr);
+            CuratorOp updateOp = zkClient.transactionOp().setData().forPath(path, data);
+            ops.add(updateOp);
+            if (ops.size() == MAX_BATCH_SIZE) {
+                zkClient.transaction().forOperations(ops);
+                ops.clear();
+            }
+        }
+        if (!ops.isEmpty()) {
+            zkClient.transaction().forOperations(ops);
+        }
+    }
+
     public void deleteLeaderAndIsr(TableBucket tableBucket) throws Exception {
         String path = LeaderAndIsrZNode.path(tableBucket);
         zkClient.delete().forPath(path);
@@ -764,12 +789,17 @@ public class ZooKeeperClient implements AutoCloseable {
                     new HashMap<>(previous.getBucketLogEndOffset());
             bucketLogEndOffset.putAll(lakeTableSnapshot.getBucketLogEndOffset());
 
+            Map<Long, String> partitionNameById =
+                    new HashMap<>(previous.getPartitionNameIdByPartitionId());
+            partitionNameById.putAll(lakeTableSnapshot.getPartitionNameIdByPartitionId());
+
             lakeTableSnapshot =
                     new LakeTableSnapshot(
                             lakeTableSnapshot.getSnapshotId(),
                             lakeTableSnapshot.getTableId(),
                             bucketLogStartOffset,
-                            bucketLogEndOffset);
+                            bucketLogEndOffset,
+                            partitionNameById);
             zkClient.setData().forPath(path, LakeTableZNode.encode(lakeTableSnapshot));
         } else {
             zkClient.create()

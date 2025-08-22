@@ -318,10 +318,14 @@
                                         <!-- start exclude for metric -->
                                         <exclude>com.alibaba.fluss.metrics.*</exclude>
                                         <!-- end exclude for metric -->
-                                        <exclude>com.alibaba.fluss.flink.lakehouse.*</exclude>
+                                        <exclude>com.alibaba.fluss.flink.lake.*</exclude>
                                         <exclude>com.alibaba.fluss.kafka.*</exclude>
                                         <!-- exclude for fluss-ci-tools -->
                                         <exclude>com.alibaba.fluss.tools.ci.*</exclude>
+                                        <!-- end exclude for predicate -->
+                                        <exclude>com.alibaba.fluss.predicate.*</exclude>
+                                        <!-- end exclude for lake source -->
+                                        <exclude>com.alibaba.fluss.lake.source.*</exclude>
                                         <!-- exclude for dummy class -->
                                         <exclude>com.alibaba.fluss.dist.DummyClass</exclude>
                                         <exclude>com.alibaba.fluss.flink.DummyClass120</exclude>

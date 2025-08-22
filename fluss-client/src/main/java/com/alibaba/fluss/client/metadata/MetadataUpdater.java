@@ -26,6 +26,7 @@ import com.alibaba.fluss.cluster.ServerType;
 import com.alibaba.fluss.config.ConfigOptions;
 import com.alibaba.fluss.config.Configuration;
 import com.alibaba.fluss.exception.FlussRuntimeException;
+import com.alibaba.fluss.exception.PartitionNotExistException;
 import com.alibaba.fluss.exception.RetriableException;
 import com.alibaba.fluss.metadata.PhysicalTablePath;
 import com.alibaba.fluss.metadata.TableBucket;
@@ -116,7 +117,7 @@ public class MetadataUpdater {
     }
 
     public int leaderFor(TableBucket tableBucket) {
-        ServerNode serverNode = cluster.leaderFor(tableBucket);
+        Integer serverNode = cluster.leaderFor(tableBucket);
         if (serverNode == null) {
             for (int i = 0; i < MAX_RETRY_TIMES; i++) {
                 TablePath tablePath = cluster.getTablePathOrElseThrow(tableBucket.getTableId());
@@ -144,10 +145,10 @@ public class MetadataUpdater {
             }
         }
 
-        return serverNode.id();
+        return serverNode;
     }
 
-    public @Nullable ServerNode getTabletServer(int id) {
+    private @Nullable ServerNode getTabletServer(int id) {
         return cluster.getTabletServer(id);
     }
 
@@ -165,10 +166,14 @@ public class MetadataUpdater {
                 this::getRandomTabletServer, rpcClient, TabletServerGateway.class);
     }
 
-    public TabletServerGateway newTabletServerClientForNode(int serverId) {
-        final ServerNode serverNode = getTabletServer(serverId);
-        return GatewayClientProxy.createGatewayProxy(
-                () -> serverNode, rpcClient, TabletServerGateway.class);
+    public @Nullable TabletServerGateway newTabletServerClientForNode(int serverId) {
+        @Nullable final ServerNode serverNode = getTabletServer(serverId);
+        if (serverNode == null) {
+            return null;
+        } else {
+            return GatewayClientProxy.createGatewayProxy(
+                    () -> serverNode, rpcClient, TabletServerGateway.class);
+        }
     }
 
     public void checkAndUpdateTableMetadata(Set<TablePath> tablePaths) {
@@ -187,7 +192,8 @@ public class MetadataUpdater {
      *
      * <p>and update partition metadata .
      */
-    public boolean checkAndUpdatePartitionMetadata(PhysicalTablePath physicalTablePath) {
+    public boolean checkAndUpdatePartitionMetadata(PhysicalTablePath physicalTablePath)
+            throws PartitionNotExistException {
         if (!cluster.getPartitionId(physicalTablePath).isPresent()) {
             updateMetadata(null, Collections.singleton(physicalTablePath), null);
         }
@@ -251,7 +257,8 @@ public class MetadataUpdater {
     protected void updateMetadata(
             @Nullable Set<TablePath> tablePaths,
             @Nullable Collection<PhysicalTablePath> tablePartitionNames,
-            @Nullable Collection<Long> tablePartitionIds) {
+            @Nullable Collection<Long> tablePartitionIds)
+            throws PartitionNotExistException {
         try {
             synchronized (this) {
                 cluster =
@@ -266,6 +273,9 @@ public class MetadataUpdater {
             Throwable t = ExceptionUtils.stripExecutionException(e);
             if (t instanceof RetriableException || t instanceof TimeoutException) {
                 LOG.warn("Failed to update metadata, but the exception is re-triable.", t);
+            } else if (t instanceof PartitionNotExistException) {
+                LOG.warn("Failed to update metadata because the partition does not exist", t);
+                throw (PartitionNotExistException) t;
             } else {
                 throw new FlussRuntimeException("Failed to update metadata", t);
             }
