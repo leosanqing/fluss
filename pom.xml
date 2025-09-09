@@ -101,6 +101,7 @@
         <arrow.version>15.0.0</arrow.version>
         <paimon.version>1.2.0</paimon.version>
         <iceberg.version>1.9.1</iceberg.version>
+        <hudi.version>0.15.0</hudi.version>
 
         <fluss.hadoop.version>2.10.2</fluss.hadoop.version>
         <frocksdb.version>6.20.3-ververica-2.0</frocksdb.version>
